@@ -1,0 +1,77 @@
+name: Latest Blog Posts
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme-with-blog:
+    name: Update README with Latest Posts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Pull Blog Posts
+        uses: gautamkrishnar/blog-post-workflow@v1
+        with:
+          feed_list: "https://emuvlucht.vercel.app/feed.xml"
+          max_post_count: 5
+          disable_sort: false
+          template: "|||[$title]($url) - $date"  # Tanpa titik di akhir
+          list_delimiter: "\n"
+          date_format: "mmm dd, yyyy"
+          output_file: "blog-posts.txt"
+
+      - name: Format Posts dengan Karakter Kustom
+        run: |
+          if [ -f blog-posts.txt ] && [ -s blog-posts.txt ]; then
+            # Baca file dan hapus placeholder
+            mapfile -t lines < blog-posts.txt
+            total=${#lines[@]}
+            
+            # Mulai dengan marker START dan newline
+            echo "<!-- BLOG-POST-LIST:START -->" > formatted-posts.txt
+            
+            # Proses setiap baris dengan karakter yang sesuai
+            for (( i=0; i<total; i++ )); do
+              # Hapus "|||" di awal
+              line="${lines[$i]#|||}"
+              
+              # Tambahkan karakter berdasarkan posisi
+              if [ $i -eq 0 ]; then
+                echo "┏ ${line}" >> formatted-posts.txt  # Tanpa titik di akhir
+              elif [ $i -eq $((total-1)) ]; then
+                echo "┗ ${line}" >> formatted-posts.txt  # Tanpa titik di akhir
+              else
+                echo "┣ ${line}" >> formatted-posts.txt  # Tanpa titik di akhir
+              fi
+            done
+            
+            # Akhiri dengan marker END
+            echo "<!-- BLOG-POST-LIST:END -->" >> formatted-posts.txt
+            
+            # Ganti konten di README.md
+            perl -i -pe '
+              BEGIN { $/ = undef; }
+              s/<!-- BLOG-POST-LIST:START -->.*?<!-- BLOG-POST-LIST:END -->/`cat formatted-posts.txt`/se;
+            ' README.md
+            
+            # Cleanup
+            rm formatted-posts.txt blog-posts.txt
+            echo "✅ Blog posts berhasil diformat!"
+          else
+            echo "Tidak ada postingan blog yang ditemukan."
+          fi
+
+      - name: Commit dan Push Perubahan
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add README.md
+          git commit -m "chore: update blog posts dengan format kustom" || echo "Tidak ada perubahan untuk di-commit."
+          git push

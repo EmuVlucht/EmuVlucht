@@ -1,0 +1,190 @@
+name: Profile Dynamic Updater
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-profile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Visitor Counter & Rotate Header
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎨 PROFILE DYNAMIC UPDATER"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+          COUNTER_FILE=".github/header_counter.txt"
+          
+          if [ -f "$COUNTER_FILE" ]; then
+            CURRENT_COUNT=$(cat "$COUNTER_FILE")
+          else
+            CURRENT_COUNT=0
+          fi
+          
+          NEXT_COUNT=$((CURRENT_COUNT + 1))
+          if [ $NEXT_COUNT -gt 2 ]; then
+            NEXT_COUNT=0
+          fi
+          
+          echo "$NEXT_COUNT" > "$COUNTER_FILE"
+          
+          case $NEXT_COUNT in
+            0) HEADER_OPTION="A" ;;
+            1) HEADER_OPTION="B" ;;
+            2) HEADER_OPTION="C" ;;
+          esac
+          
+          echo "📌 Current Header Option: $HEADER_OPTION (Counter: $NEXT_COUNT)"
+          echo "HEADER_OPTION=$HEADER_OPTION" >> $GITHUB_ENV
+
+      - name: Update README with Python
+        run: |
+          python3 << 'EOF'
+          import os
+          import re
+
+          header_option = os.environ.get('HEADER_OPTION', 'C')
+
+          header_a = '<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=Hi%20There!%20I%27m%20EmuVlucht%20👋&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=Full%20Stack%20Developer%20%26%20Content%20Creator&descAlignY=52&descAlign=50"/>'
+
+          header_b = '<img width="100%" src="https://capsule-render.vercel.app/api?type=rounded&color=gradient&customColorList=6,11,20&height=150&section=header&text=EmuVlucht&fontSize=50&fontColor=fff&animation=twinkling&fontAlignY=50&stroke=ffffff&strokeWidth=2"/>'
+
+          header_c = '<img width="100%" src="https://raw.githubusercontent.com/EmuVlucht/EmuVlucht/main/assets/banner.gif"/>'
+
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          if header_option == "A":
+              new_section = f'''<!-- OPSI A: Capsule Render - Wave Header dengan Animasi -->
+           {header_a}
+
+          <!-- OPSI B: Capsule Render - Rounded Style -->
+          <!-- {header_b} -->
+
+          <!-- OPSI C: Custom Banner Image (upload gambar sendiri) -->
+          <!-- {header_c} -->'''
+
+          elif header_option == "B":
+              new_section = f'''<!-- OPSI A: Capsule Render - Wave Header dengan Animasi -->
+          <!-- {header_a} -->
+
+          <!-- OPSI B: Capsule Render - Rounded Style -->
+           {header_b}
+
+          <!-- OPSI C: Custom Banner Image (upload gambar sendiri) -->
+          <!-- {header_c} -->'''
+
+          else:
+              new_section = f'''<!-- OPSI A: Capsule Render - Wave Header dengan Animasi -->
+          <!-- {header_a} -->
+
+          <!-- OPSI B: Capsule Render - Rounded Style -->
+          <!-- {header_b} -->
+
+          <!-- OPSI C: Custom Banner Image (upload gambar sendiri) -->
+           {header_c}'''
+
+          opsi_a_start = content.find('<!-- OPSI A: Capsule Render')
+          bagian_2_start = content.find('<!-- ═══════════════════════════════════════════════════════════════════════════\n     BAGIAN 2:')
+
+          if opsi_a_start != -1 and bagian_2_start != -1:
+              content = content[:opsi_a_start] + new_section + '\n\n' + content[bagian_2_start:]
+              
+              with open('README.md', 'w', encoding='utf-8') as f:
+                  f.write(content)
+              print(f"✅ Header updated to Option {header_option}")
+          else:
+              print("⚠️ Could not find header section markers")
+          EOF
+
+          echo "✅ Header rotation complete!"
+
+      - name: Update Last Updated Badge
+        run: |
+          python3 << 'EOF'
+          import re
+          from datetime import datetime
+          
+          # Get current month and year
+          months_id = {
+              1: "Januari", 2: "Februari", 3: "Maret", 4: "April",
+              5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus",
+              9: "September", 10: "Oktober", 11: "November", 12: "Desember"
+          }
+          
+          now = datetime.utcnow()
+          month_name = months_id[now.month]
+          year = now.year
+          date_str = f"{month_name}%20{year}"
+          
+          with open('README.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+          
+          # Find and replace Last Updated badge
+          start_marker = '<!-- LAST-UPDATED:START -->'
+          end_marker = '<!-- LAST-UPDATED:END -->'
+          
+          new_badge = f'''<!-- LAST-UPDATED:START -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Last%20Updated-{date_str}-904e95?style=flat-square" alt="Last Updated"/>
+</p>
+<!-- LAST-UPDATED:END -->'''
+          
+          start_idx = content.find(start_marker)
+          end_idx = content.find(end_marker)
+          
+          if start_idx != -1 and end_idx != -1:
+              content = content[:start_idx] + new_badge + content[end_idx + len(end_marker):]
+              
+              with open('README.md', 'w', encoding='utf-8') as f:
+                  f.write(content)
+              print(f"✅ Last Updated badge updated to {month_name} {year}")
+          else:
+              print("⚠️ Could not find LAST-UPDATED markers")
+          EOF
+          
+          echo "✅ Last Updated badge update complete!"
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          git add -A
+          
+          if git diff --quiet --cached; then
+            echo "ℹ️  No changes detected. Skipping commit."
+            exit 0
+          fi
+          
+          TIMESTAMP=$(date +'%Y-%m-%d %H:%M UTC')
+          git commit -m "🔄 Profile update at $TIMESTAMP"
+          
+          # Pull latest changes and rebase to avoid conflicts
+          git pull --rebase origin main || git pull --rebase origin master || true
+          
+          # Push with retry logic
+          for i in 1 2 3; do
+            if git push; then
+              break
+            fi
+            echo "⚠️  Push attempt $i failed, retrying..."
+            git pull --rebase origin main || git pull --rebase origin master || true
+            sleep 2
+          done
+          
+          if git push; then
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "✅ SUCCESS! Profile updated"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          else
+            echo "❌ Failed to push changes"
+            exit 1
+          fi

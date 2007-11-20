@@ -1,0 +1,102 @@
+name: Start All Workflows
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  trigger-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cleanup old workflow runs
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🧹 Membersihkan workflow runs lama..."
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          
+          # Hapus run yang gagal
+          gh run list -R ${{ github.repository }} --status failure --json databaseId -q '.[].databaseId' 2>/dev/null | while read id; do
+            gh run delete -R ${{ github.repository }} "$id" 2>/dev/null || true
+          done
+          
+          # Hapus run yang dibatalkan
+          gh run list -R ${{ github.repository }} --status cancelled --json databaseId -q '.[].databaseId' 2>/dev/null | while read id; do
+            gh run delete -R ${{ github.repository }} "$id" 2>/dev/null || true
+          done
+          
+          echo "✅ Cleanup selesai!"
+
+      - name: Trigger Profile Dynamic Updater
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "🚀 Triggering Profile Dynamic Updater..."
+          gh workflow run "Profile Dynamic Updater" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Trigger Random Anime Card
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "🎌 Triggering Random Anime Card..."
+          gh workflow run "Update Random Anime Card" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Trigger Snake Animation
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "🐍 Triggering Snake Animation..."
+          gh workflow run "Generate Snake Animation" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Trigger Blog Posts
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "📝 Triggering Blog Posts..."
+          gh workflow run "Latest Blog Posts" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Trigger WakaTime Stats
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "⏱️ Triggering WakaTime Stats..."
+          gh workflow run "WakaTime Stats" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Trigger Update Contributors
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "👥 Triggering Update Contributors..."
+          gh workflow run "Update Contributors by Recent Activity" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Trigger Clock Updater
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "🕐 Triggering Clock Updater..."
+          gh workflow run "Update Clock Badge" -R ${{ github.repository }} || echo "⚠️ Workflow tidak ditemukan"
+
+      - name: Summary
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ Semua workflow berhasil dipicu!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "Workflow yang dijalankan:"
+          echo "  1. Profile Dynamic Updater (Rotasi Header)"
+          echo "  2. Update Random Anime Card (Karakter Anime)"
+          echo "  3. Generate Snake Animation (Animasi Ular)"
+          echo "  4. Latest Blog Posts (Blog Post)"
+          echo "  5. WakaTime Stats (Statistik Coding)"
+          echo "  6. Update Contributors (Daftar Kontributor)"
+          echo "  7. Update Clock Badge (Jam WITA)"
+          echo ""
+          echo "📊 Cek tab Actions untuk melihat status masing-masing workflow."
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -1,0 +1,149 @@
+name: Update Contributors by Recent Activity
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Setiap 6 jam
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  update-contributors:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update Contributors Section
+        uses: actions/github-script@v7
+        env:
+          # Gunakan PAT untuk akses repo private
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+        with:
+          script: |
+            const fs = require('fs');
+            
+            const owner = 'EmuVlucht';
+            const excludeRepos = ['.github'];
+            
+            console.log('Fetching all repositories (public and private)...');
+            
+            // Gunakan type: 'all' untuk mendapatkan repo public dan private
+            const repos = await github.paginate(github.rest.repos.listForUser, {
+              username: owner,
+              type: 'all',  // Berbeda dengan sebelumnya yang 'public'
+              sort: 'pushed',
+              direction: 'desc',
+              per_page: 100
+            });
+            
+            // Filter dan ambil 3 repo terbaru (selain repo profil)
+            const filteredRepos = repos
+              .filter(repo => 
+                !excludeRepos.includes(repo.name) && 
+                repo.name !== owner  // Exclude repo profil
+              )
+              .slice(0, 3);  // Ambil 3 terbaru saja
+            
+            console.log(`Found ${repos.length} total repositories`);
+            console.log(`Processing ${filteredRepos.length} recent repositories`);
+            
+            // Bangun konten contributors section
+            let contributorsSection = `## <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/People/Busts%20in%20Silhouette.png" alt="Contributors" width="30" /> Contributors
+
+### EmuVlucht (Profile Repository)
+
+<p align="center">
+  <a href="https://github.com/EmuVlucht/EmuVlucht/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=EmuVlucht/EmuVlucht" alt="Contributors EmuVlucht"/>
+  </a>
+</p>
+
+<details>
+<summary>📊 All Repositories</summary>
+<br>
+
+`;
+            
+            // Loop untuk setiap repo terbaru
+            for (const repo of filteredRepos) {
+              const privateIndicator = repo.private ? ' 🔒' : '';
+              const pushedAt = new Date(repo.pushed_at).toLocaleDateString('id-ID', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+              });
+              
+              contributorsSection += `### ${repo.name}${privateIndicator}
+<sub>Update terakhir: ${pushedAt}</sub>
+
+<details>
+<summary>📊 Contributors</summary>
+<br>
+
+<p align="center">
+  <a href="https://github.com/EmuVlucht/${repo.name}/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=EmuVlucht/${repo.name}" alt="Contributors ${repo.name}"/>
+  </a>
+</p>
+
+</details>
+
+`;
+            }
+            
+            contributorsSection += `</details>`;
+            
+            // Update README.md
+            let readme = fs.readFileSync('README.md', 'utf8');
+            
+            const startMarker = '<!-- CONTRIBUTORS-LIST:START -->';
+            const endMarker = '<!-- CONTRIBUTORS-LIST:END -->';
+            
+            const startIndex = readme.indexOf(startMarker);
+            const endIndex = readme.indexOf(endMarker);
+            
+            if (startIndex !== -1 && endIndex !== -1) {
+              readme = readme.substring(0, startIndex + startMarker.length) + 
+                       '\n' + contributorsSection + '\n' + 
+                       readme.substring(endIndex);
+              
+              fs.writeFileSync('README.md', readme);
+              console.log('README.md updated successfully!');
+            } else {
+              console.log('Markers not found in README.md');
+              console.log('Please add these markers to your README.md:');
+              console.log(startMarker);
+              console.log(endMarker);
+            }
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Dapatkan branch saat ini secara dinamis
+          CURRENT_BRANCH=${GITHUB_REF#refs/heads/}
+          
+          # Pull terbaru untuk menghindari konflik
+          git pull origin $CURRENT_BRANCH --rebase --autostash || true
+          
+          git add README.md
+          if ! git diff --quiet --cached; then
+            git commit -m "Update contributors list [skip ci]"
+            git push origin $CURRENT_BRANCH
+          else
+            echo "No changes to commit"
+          fi

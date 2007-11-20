@@ -1,0 +1,61 @@
+name: Update Clock Badge
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-clock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Clock in README
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🕐 UPDATING CLOCK - WITA (Asia/Makassar)"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          
+          CURRENT_TIME=$(TZ='Asia/Makassar' date +'%H:%M:%S')
+          CURRENT_DATE=$(TZ='Asia/Makassar' date +'%d %b %Y')
+          
+          echo "Current Time: $CURRENT_TIME WITA"
+          echo "Current Date: $CURRENT_DATE"
+          
+          ENCODED_TIME=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$CURRENT_TIME WITA'))")
+          ENCODED_DATE=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$CURRENT_DATE'))")
+          
+          NEW_CLOCK_BADGE="<p align=\"center\">
+  <img src=\"https://img.shields.io/badge/%F0%9F%95%90%20Waktu%20WITA-${ENCODED_TIME}-6AD3F7?style=for-the-badge\" alt=\"Waktu WITA\"/>
+  <img src=\"https://img.shields.io/badge/%F0%9F%93%85%20Tanggal-${ENCODED_DATE}-904e95?style=for-the-badge\" alt=\"Tanggal\"/>
+</p>"
+          
+          if grep -q '<!-- CLOCK:START -->' README.md && grep -q '<!-- CLOCK:END -->' README.md; then
+            sed -i '/<!-- CLOCK:START -->/,/<!-- CLOCK:END -->/c\<!-- CLOCK:START -->\n'"$NEW_CLOCK_BADGE"'\n<!-- CLOCK:END -->' README.md
+            echo "✅ Clock updated successfully!"
+          else
+            echo "❌ Clock markers not found in README.md"
+            exit 1
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          git add README.md
+          
+          if git diff --quiet --cached; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          
+          TIMESTAMP=$(TZ='Asia/Makassar' date +'%H:%M WITA')
+          git commit -m "🕐 Update clock: $TIMESTAMP"
+          
+          git pull --rebase origin main || git pull --rebase origin master || true
+          git push || echo "Push failed"

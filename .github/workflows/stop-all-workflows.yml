@@ -1,0 +1,81 @@
+name: Stop All Workflows
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  cancel-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cancel all running workflows
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🛑 Menghentikan semua workflow yang sedang berjalan..."
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          
+          # Dapatkan ID dari workflow saat ini agar tidak membatalkan diri sendiri
+          CURRENT_RUN_ID=${{ github.run_id }}
+          
+          # Fungsi untuk membatalkan workflow
+          cancel_workflow() {
+            local status=$1
+            local run_ids=$(gh run list -R ${{ github.repository }} --status "$status" --json databaseId,workflowName -q '.[] | select(.databaseId != '$CURRENT_RUN_ID') | .databaseId' 2>/dev/null || echo "")
+            
+            if [ -n "$run_ids" ]; then
+              echo "Membatalkan $status workflows:"
+              echo "$run_ids" | while read -r run_id; do
+                if [ -n "$run_id" ]; then
+                  echo "  • Run ID: $run_id"
+                  gh run cancel -R ${{ github.repository }} "$run_id" 2>/dev/null || true
+                fi
+              done
+            else
+              echo "Tidak ada $status workflows untuk dibatalkan."
+            fi
+          }
+          
+          # Batalkan workflow yang sedang dalam antrian
+          cancel_workflow "queued"
+          
+          # Batalkan workflow yang sedang berjalan
+          cancel_workflow "in_progress"
+          
+          echo ""
+          echo "✅ Semua workflow yang berjalan telah dibatalkan!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+      - name: Optional - Hapus semua workflow runs
+        if: true  # Ubah menjadi true jika ingin menghapus history juga
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          echo "🗑️  Menghapus semua workflow runs (opsional)..."
+          
+          # Hapus berdasarkan status
+          for status in failure cancelled success; do
+            gh run list -R ${{ github.repository }} --status "$status" --json databaseId -q '.[].databaseId' 2>/dev/null | while read id; do
+              gh run delete -R ${{ github.repository }} "$id" 2>/dev/null || true
+            done
+          done
+          
+          echo "✅ History workflow telah dibersihkan!"
+
+      - name: Summary
+        run: |
+          echo ""
+          echo "📋 Ringkasan:"
+          echo "• Semua workflow yang sedang berjalan (queued/in_progress) telah dibatalkan"
+          echo "• Workflow dengan schedule akan tetap berjalan sesuai jadwal"
+          echo "• Untuk menghentikan permanen, nonaktifkan schedule di masing-masing workflow"
+          echo ""
+          echo "⚠️  Catatan: Workflow yang sudah selesai (success/failure/cancelled) tidak terpengaruh"
+          echo "   Gunakan opsi 'Hapus semua workflow runs' untuk membersihkan history."

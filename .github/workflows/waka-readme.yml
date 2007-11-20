@@ -1,0 +1,36 @@
+name: WakaTime Stats
+
+on:
+  schedule:
+    # Runs daily at midnight UTC
+    - cron: "0 0 * * *"
+  # Allows manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme:
+    name: Update README with WakaTime Stats
+    runs-on: ubuntu-latest
+    steps:
+      - uses: athul/waka-readme@master
+        with:
+          WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
+          # Time range for stats
+          TIME_RANGE: last_7_days
+          # Show time spent
+          SHOW_TIME: true
+          # Show total coding time
+          SHOW_TOTAL: true
+          # Number of languages to show
+          LANG_COUNT: 10
+          # Show project stats
+          SHOW_PROJECT: false
+          # Show editors
+          SHOW_EDITORS: false
+          # Show operating systems
+          SHOW_OS: false
+          # Custom commit message
+          COMMIT_MESSAGE: "chore: update WakaTime stats"
