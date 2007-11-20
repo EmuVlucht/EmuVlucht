@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Prisma ORM - EmuVlucht Blog</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e7;
+            line-height: 1.8;
+        }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        header { margin-bottom: 40px; }
+        header a { color: #8b5cf6; text-decoration: none; }
+        h1 {
+            font-size: 2rem;
+            margin: 20px 0;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .meta { color: #71717a; margin-bottom: 30px; }
+        article { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 40px; }
+        article h3 { color: #a855f7; margin: 25px 0 15px; }
+        article p { margin-bottom: 15px; color: #d4d4d8; }
+        article ul { margin-left: 25px; margin-bottom: 15px; }
+        article li { margin-bottom: 8px; }
+        article a { color: #8b5cf6; }
+        code { background: rgba(0,0,0,0.3); padding: 2px 8px; border-radius: 4px; font-family: 'Fira Code', monospace; }
+        pre { background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px; overflow-x: auto; margin: 15px 0; }
+        pre code { background: none; padding: 0; }
+        .tag { display: inline-block; background: rgba(139,92,246,0.2); color: #a855f7; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin-right: 8px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html">← Kembali ke Blog</a>
+            <h1>Belajar Prisma ORM untuk Database Management</h1>
+            <div class="meta">29 Maret 2025 | oleh EmuVlucht</div>
+        </header>
+        
+        <article>
+            <p>Dalam project Misaki Bot, aku menggunakan <strong>Prisma ORM</strong> untuk mengelola database. Di artikel ini, aku akan share pengalaman dan tips menggunakan Prisma.</p>
+            
+            <h3>Kenapa Prisma?</h3>
+            <ul>
+                <li><strong>Type-safe</strong> - Auto-generated types dari schema, mengurangi bug</li>
+                <li><strong>Mudah digunakan</strong> - API yang intuitif dan dokumentasi lengkap</li>
+                <li><strong>Migration</strong> - Database versioning yang powerful</li>
+                <li><strong>Prisma Studio</strong> - GUI bawaan untuk manage data dengan mudah</li>
+            </ul>
+            
+            <h3>Instalasi</h3>
+            <p>Untuk memulai dengan Prisma, jalankan:</p>
+            <pre><code>npm install prisma --save-dev
+npm install @prisma/client
+npx prisma init</code></pre>
+            
+            <h3>Schema Example</h3>
+            <p>Contoh schema untuk WhatsApp bot:</p>
+            <pre><code>model User {
+  id        String   @id
+  username  String
+  warnings  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Group {
+  id       String @id
+  prefix   String @default("!")
+  logChannel String?
+}</code></pre>
+            
+            <h3>Query Example</h3>
+            <p>Prisma Client membuat query sangat mudah:</p>
+            <pre><code>// Mencari user
+const user = await prisma.user.findUnique({
+  where: { id: whatsappUserId }
+});
+
+// Membuat user baru
+const newUser = await prisma.user.create({
+  data: {
+    id: whatsappUserId,
+    username: whatsappUsername
+  }
+});</code></pre>
+            
+            <h3>Tips</h3>
+            <ul>
+                <li>Selalu jalankan <code>npx prisma generate</code> setelah mengubah schema</li>
+                <li>Gunakan <code>npx prisma studio</code> untuk melihat data secara visual</li>
+                <li>Backup database sebelum menjalankan migration di production</li>
+            </ul>
+            
+            <p>Kalau kamu baru belajar backend development, Prisma adalah pilihan yang sangat bagus untuk mulai!</p>
+            
+            <span class="tag">Prisma</span>
+            <span class="tag">Database</span>
+            <span class="tag">Tutorial</span>
+            <span class="tag">Node.js</span>
+        </article>
+    </div>
+</body>
+</html>

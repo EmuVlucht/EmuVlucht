@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>EmuVlucht Blog</title>
+        <description>Programming, Anime, dan kehidupan sehari-hari seorang developer</description>
+        <link>https://emuvlucht.vercel.app/</link>
+        <atom:link href="https://emuvlucht.vercel.app/feed.xml" rel="self" type="application/rss+xml"/>
+        <language>id</language>
+        <lastBuildDate>Mon, 14 Apr 2025 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>NebulaHub x Misaki Bot - Kolaborasi Epik!</title>
+            <link>https://emuvlucht.vercel.app/posts/nebulahub-collaboration.html</link>
+            <guid>https://emuvlucht.vercel.app/posts/nebulahub-collaboration.html</guid>
+            <pubDate>Mon, 14 Apr 2025 00:00:00 +0000</pubDate>
+            <description><![CDATA[
+                <p>Akhirnya! Setelah berbulan-bulan kerja keras, NebulaHub dan Misaki Bot resmi berkolaborasi.</p>
+                <p><strong>"One bot, three souls, infinite possibilities"</strong> - tagline yang menggambarkan visi kami.</p>
+                <p>Kolaborasi ini membawa yang terbaik dari kedua project:</p>
+                <ul>
+                    <li>Infrastructure dari NebulaHub</li>
+                    <li>Features dari Misaki Bot</li>
+                    <li>Community-driven development</li>
+                </ul>
+                <p>Project ini dilisensikan dengan dual license (MIT + BudzVerse Labs Custom License) untuk memberikan fleksibilitas maksimal kepada developer.</p>
+            ]]></description>
+        </item>
+        
+        <item>
+            <title>Belajar Prisma ORM untuk Database Management</title>
+            <link>https://emuvlucht.vercel.app/posts/belajar-prisma.html</link>
+            <guid>https://emuvlucht.vercel.app/posts/belajar-prisma.html</guid>
+            <pubDate>Sat, 29 Mar 2025 00:00:00 +0000</pubDate>
+            <description><![CDATA[
+                <p>Dalam project Misaki Bot, aku menggunakan Prisma ORM untuk mengelola database.</p>
+                <h3>Kenapa Prisma?</h3>
+                <ul>
+                    <li><strong>Type-safe</strong> - Auto-generated types dari schema</li>
+                    <li><strong>Mudah digunakan</strong> - API yang intuitif</li>
+                    <li><strong>Migration</strong> - Database versioning yang powerful</li>
+                    <li><strong>Prisma Studio</strong> - GUI untuk manage data</li>
+                </ul>
+                <p>Kalau kamu baru belajar backend development, Prisma adalah pilihan yang sangat bagus untuk mulai!</p>
+            ]]></description>
+        </item>
+
+        <item>
+            <title>Memperkenalkan Misaki Bot - WhatsApp Bot Multifungsi</title>
+            <link>https://emuvlucht.vercel.app/posts/misaki-bot-intro.html</link>
+            <guid>https://emuvlucht.vercel.app/posts/misaki-bot-intro.html</guid>
+            <pubDate>Tue, 18 Feb 2025 00:00:00 +0000</pubDate>
+            <description><![CDATA[
+                <p>Hai semuanya! Hari ini aku mau memperkenalkan project yang sudah lama aku kerjakan - Misaki Bot.</p>
+                <p>Misaki Bot adalah WhatsApp bot yang didesain untuk membantu komunitas dengan berbagai fitur menarik. Bot ini dibangun dengan JavaScript dan menggunakan teknologi modern seperti Prisma ORM untuk database management.</p>
+                <h3>Fitur Utama:</h3>
+                <ul>
+                    <li>Moderation Tools - Ban, kick, mute, dan warning system</li>
+                    <li>Fun Commands - Games, anime reactions, dan trivia</li>
+                    <li>Utility - Info server, user lookup, dan lainnya</li>
+                    <li>Customizable - Prefix dan settings bisa dikustomisasi</li>
+                </ul>
+                <p>Check out repository-nya di <a href="https://github.com/EmuVlucht/misaki-bot">GitHub</a>!</p>
+            ]]></description>
+        </item>
+
+    </channel>
+</rss>

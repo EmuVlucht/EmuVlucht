@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmuVlucht Blog</title>
+    <link rel="alternate" type="application/rss+xml" title="EmuVlucht Blog RSS" href="feed.xml">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e4e4e7;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        header p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+        .post {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .post:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .post h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #f4f4f5;
+        }
+        .post h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .post h2 a:hover {
+            color: #a855f7;
+        }
+        .post-meta {
+            color: #71717a;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        .post-content {
+            color: #d4d4d8;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(139, 92, 246, 0.2);
+            color: #a855f7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-top: 15px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #71717a;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: #8b5cf6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EmuVlucht Blog</h1>
+            <p>Programming, Anime, dan kehidupan sehari-hari seorang developer</p>
+        </header>
+
+        <article class="post">
+            <h2><a href="posts/nebulahub-collaboration.html">NebulaHub x Misaki Bot - Kolaborasi Epik!</a></h2>
+            <div class="post-meta">14 April 2025 | oleh EmuVlucht</div>
+            <div class="post-content">
+                <p>Akhirnya! Setelah berbulan-bulan kerja keras, NebulaHub dan Misaki Bot resmi berkolaborasi. "One bot, three souls, infinite possibilities" - tagline yang menggambarkan visi kami...</p>
+            </div>
+            <span class="tag">NebulaHub</span>
+            <span class="tag">Collaboration</span>
+        </article>
+
+        <article class="post">
+            <h2><a href="posts/belajar-prisma.html">Belajar Prisma ORM untuk Database Management</a></h2>
+            <div class="post-meta">29 Maret 2025 | oleh EmuVlucht</div>
+            <div class="post-content">
+                <p>Dalam project Misaki Bot, aku menggunakan Prisma ORM untuk mengelola database. Kenapa Prisma? Karena type-safe, mudah digunakan, dan migration-nya sangat membantu...</p>
+            </div>
+            <span class="tag">Prisma</span>
+            <span class="tag">Database</span>
+            <span class="tag">Tutorial</span>
+        </article>
+
+        <article class="post">
+            <h2><a href="posts/misaki-bot-intro.html">Memperkenalkan Misaki Bot - WhatsApp Bot Multifungsi</a></h2>
+            <div class="post-meta">18 Februari 2025 | oleh EmuVlucht</div>
+            <div class="post-content">
+                <p>Hai semuanya! Hari ini aku mau memperkenalkan project yang sudah lama aku kerjakan - Misaki Bot. Ini adalah WhatsApp bot yang didesain untuk membantu komunitas dengan berbagai fitur menarik...</p>
+            </div>
+            <span class="tag">WhatsApp Bot</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Open Source</span>
+        </article>
+
+        <footer>  
+            <p>© 2024-sekarang <a href="https://github.com/EmuVlucht">EmuVlucht.</a> Semua hak dilindungi undang-undang.</p>
+            <p><a href="feed.xml">RSS Feed</a></p>
+        </footer>
+    </div>
+</body>
+</html>
