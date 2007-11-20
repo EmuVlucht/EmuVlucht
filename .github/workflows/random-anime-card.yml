@@ -1,0 +1,130 @@
+name: Update Random Anime Card
+
+on:
+  schedule:
+    # Runs every 6 hours (4 times a day)
+    - cron: "0 */6 * * *"
+  # Allows manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-anime-card:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update README with random anime character
+        run: |
+          # ╔════════════════════════════════════════════════════════════════════╗
+          # ║   DAFTAR KARAKTER ANIME - CUSTOMIZE DI SINI!                       ║
+          # ║   Format: "NAMA_KARAKTER|URL_GAMBAR"                               ║
+          # ╚════════════════════════════════════════════════════════════════════╝
+          
+          declare -a CHARACTERS=(
+            "EmuVlucht|https://wallpapercave.com/pwp/wp15918974.jpg"
+            "Mio Takamiya|https://wallpapercave.com/wp/wp9396919.jpg"
+            "Ciel|https://i.pinimg.com/736x/14/92/97/149297a4b28b78ffad568cb13bc97082.jpg"
+            "Rinne Berlinetta|https://cdn.myanimelist.net/r/200x268/images/characters/11/314866.webp"
+            "Rimuru Tempest|https://cdn.myanimelist.net/r/200x268/images/characters/5/495796.webp"
+            "Misaki Kirihara|https://cdn.myanimelist.net/r/200x268/images/characters/14/452222.webp"
+            "Misaki Mei|https://cdn.myanimelist.net/r/200x268/images/characters/15/148131.webp"
+            "Kurumi Tokisaki|https://cdn.myanimelist.net/r/200x268/images/characters/11/201897.webp"
+            "Tohka Yatogami|https://cdn.myanimelist.net/r/200x268/images/characters/14/202193.webp"
+            "Zero Two|https://cdn.myanimelist.net/r/200x268/images/characters/6/375955.webp"
+            "Rem|https://cdn.myanimelist.net/r/200x268/images/characters/9/308217.webp"
+            "Megumin|https://cdn.myanimelist.net/r/200x268/images/characters/7/447778.webp"
+            "Asuna Yuuki|https://cdn.myanimelist.net/r/200x268/images/characters/2/295895.webp"
+          )
+
+          # ═══════════════════════════════════════════════════════════════════
+          #  STEP 1: Pilih karakter random
+          # ═══════════════════════════════════════════════════════════════════
+          RANDOM_INDEX=$((RANDOM % ${#CHARACTERS[@]}))
+          IFS='|' read -r CHAR_NAME CHAR_IMAGE <<< "${CHARACTERS[$RANDOM_INDEX]}"
+
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎌 Selected Character: $CHAR_NAME"
+          echo "🖼️  Image URL: $CHAR_IMAGE"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+          # ═══════════════════════════════════════════════════════════════════
+          #  STEP 2: Setup card data (deskripsi tetap)
+          # ═══════════════════════════════════════════════════════════════════
+          CARD_DESC="Hai, aku EmuVlucht. Seorang programmer biasa yang masih belajar. Aku sangat suka menonton anime dan catur :3"
+          CARD_INSTAGRAM="emuvlucht"
+          CARD_GITHUB="EmuVlucht"
+          CARD_BG_COLOR="%23ecf0f1"
+          CARD_PATTERN="leaf"
+          CARD_PATTERN_COLOR="%23eaeaea"
+
+          # ═══════════════════════════════════════════════════════════════════
+          #  STEP 3: URL encode (handling special characters)
+          # ═══════════════════════════════════════════════════════════════════
+          ENCODED_NAME=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$CHAR_NAME'''))")
+          ENCODED_DESC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$CARD_DESC'''))")
+
+          # ═══════════════════════════════════════════════════════════════════
+          #  STEP 4: Build new Cardivo URL
+          # ═══════════════════════════════════════════════════════════════════
+          NEW_CARD_URL="https://cardivo.vercel.app/api?name=${ENCODED_NAME}&description=${ENCODED_DESC}&image=${CHAR_IMAGE}&backgroundColor=${CARD_BG_COLOR}&instagram=${CARD_INSTAGRAM}&github=${CARD_GITHUB}&pattern=${CARD_PATTERN}&colorPattern=${CARD_PATTERN_COLOR}"
+
+          # ═══════════════════════════════════════════════════════════════════
+          #  STEP 5: Update README.md
+          # ═══════════════════════════════════════════════════════════════════
+          if grep -q 'alt="EmuVlucht Card"' README.md; then
+            # Escape & characters for sed (& has special meaning in sed replacement)
+            ESCAPED_URL=$(echo "$NEW_CARD_URL" | sed 's/&/\\&/g')
+            # Replace only the src attribute of img tag with alt="EmuVlucht Card"
+            sed -i '/alt="EmuVlucht Card"/s|src="[^"]*"|src="'"$ESCAPED_URL"'"|' README.md
+            echo "✅ Card successfully updated!"
+            echo "📝 New URL: $NEW_CARD_URL"
+          else
+            echo "❌ Error: Card with alt='EmuVlucht Card' not found in README.md"
+            echo "💡 Make sure your README.md has:"
+            echo '   <img src="..." alt="EmuVlucht Card" />'
+            exit 1
+          fi
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          git add README.md
+
+          # Check if there are changes to commit
+          if git diff --quiet --cached; then
+            echo "ℹ️  No changes detected. Skipping commit."
+            exit 0
+          fi
+
+          # Commit with informative message
+          TIMESTAMP=$(date +'%Y-%m-%d %H:%M UTC')
+          git commit -m "🎌 Anime card rotation at $TIMESTAMP"
+
+          # Pull latest changes and rebase to avoid conflicts
+          git pull --rebase origin main || git pull --rebase origin master || true
+
+          # Push with error handling (retry up to 3 times)
+          for i in 1 2 3; do
+            if git push; then
+              break
+            fi
+            echo "⚠️  Push attempt $i failed, retrying..."
+            git pull --rebase origin main || git pull --rebase origin master || true
+            sleep 2
+          done
+
+          if git push; then
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "✅ SUCCESS! Changes pushed to repository"
+            echo "🎉 Your profile card has been updated!"
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          else
+            echo "❌ Failed to push changes"
+            echo "💡 Check repository permissions"
+            exit 1
+          fi

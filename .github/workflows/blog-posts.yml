@@ -1,0 +1,36 @@
+name: Latest Blog Posts
+
+on:
+  schedule:
+    # Runs daily at midnight UTC
+    - cron: "0 0 * * *"
+  # Allows manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-readme-with-blog:
+    name: Update README with Latest Posts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Pull Blog Posts
+        uses: gautamkrishnar/blog-post-workflow@v1
+        with:
+          # RSS feed from Vercel blog
+          feed_list: "https://emuvlucht.vercel.app/feed.xml"
+          # Maximum number of posts to display
+          max_post_count: 5
+          # Disable duplicate checking
+          disable_sort: false
+          # Template for each post
+          template: ".
+┣ [$title]($url) - $date"
+          # Date format
+          date_format: "mmm dd, yyyy"
+          # Custom commit message
+          commit_message: "chore: update blog posts"
