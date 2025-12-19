@@ -23,6 +23,10 @@ jobs:
           # ║   DAFTAR KARAKTER ANIME - CUSTOMIZE DI SINI!                       ║
           # ║   Format: "NAMA_KARAKTER|URL_GAMBAR"                               ║
           # ╚════════════════════════════════════════════════════════════════════╝
+          
+          # Reference card template:
+          # https://cardivo.vercel.app/api?name=EmuVlucht&description=Hai%2C%20aku%20EmuVlucht.%20Seorang%20programmer%20biasa%20yang%20masih%20belajar.%20Aku%20sangat%20suka%20menonton%20anime%20dan%20catur%20%3A3&image=&backgroundColor=%23ecf0f1&instagram=emuvlucht&github=EmuVlucht&pattern=leaf&colorPattern=%23eaeaea
+          
           declare -a CHARACTERS=(
             "EmuVlucht|https://wallpapercave.com/pwp/wp15918974.jpg"
             "Mio Takamiya|https://wallpapercave.com/wp/wp9396919.jpg"
