@@ -1,1 +1,32 @@
 modules = ["nodejs-20", "php-8.2", "python-3.11", "go-1.21", "gcloud", "java-graalvm22.3", "bun-1.1", "deno-1", "elixir-1_15", "lua-5.2", "dotnet-8.0", "c-clang14", "cpp-clang14"]
+
+[agent]
+expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "blog-server"
+
+[[workflows.workflow]]
+name = "blog-server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python server.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
