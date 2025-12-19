@@ -1,0 +1,1 @@
+modules = ["nodejs-20", "php-8.2", "python-3.11", "go-1.21", "gcloud", "java-graalvm22.3", "bun-1.1", "deno-1", "elixir-1_15", "lua-5.2", "dotnet-8.0", "c-clang14", "cpp-clang14"]
