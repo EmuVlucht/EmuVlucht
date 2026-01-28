@@ -327,15 +327,16 @@ ALTERNATIF: Menggunakan Shields.io Badges
 <!--START_SECTION:waka-->
 
 ```txt
-Total Time: 5 hrs 57 mins
+Total Time: 7 hrs 16 mins
 
-HTML         5 hrs 20 mins   ██████████████████████▒░░   89.64 %
-Text         29 mins         ██░░░░░░░░░░░░░░░░░░░░░░░   08.28 %
-snippets     2 mins          ░░░░░░░░░░░░░░░░░░░░░░░░░   00.59 %
-CSS          1 min           ░░░░░░░░░░░░░░░░░░░░░░░░░   00.46 %
-JavaScript   1 min           ░░░░░░░░░░░░░░░░░░░░░░░░░   00.45 %
-Markdown     1 min           ░░░░░░░░░░░░░░░░░░░░░░░░░   00.32 %
-JSON         0 secs          ░░░░░░░░░░░░░░░░░░░░░░░░░   00.27 %
+HTML         6 hrs 3 mins    ████████████████████▓░░░░   83.28 %
+Text         37 mins         ██░░░░░░░░░░░░░░░░░░░░░░░   08.57 %
+JSON         14 mins         █░░░░░░░░░░░░░░░░░░░░░░░░   03.40 %
+CSS          9 mins          ▓░░░░░░░░░░░░░░░░░░░░░░░░   02.11 %
+JavaScript   7 mins          ▒░░░░░░░░░░░░░░░░░░░░░░░░   01.80 %
+snippets     2 mins          ░░░░░░░░░░░░░░░░░░░░░░░░░   00.49 %
+Markdown     1 min           ░░░░░░░░░░░░░░░░░░░░░░░░░   00.26 %
+TOML         0 secs          ░░░░░░░░░░░░░░░░░░░░░░░░░   00.10 %
 ```
 
 <!--END_SECTION:waka-->
