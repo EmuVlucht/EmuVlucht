@@ -327,15 +327,14 @@ ALTERNATIF: Menggunakan Shields.io Badges
 <!--START_SECTION:waka-->
 
 ```txt
-Total Time: 9 hrs 28 mins
+Total Time: 12 hrs 12 mins
 
-HTML         8 hrs 13 mins   █████████████████████▓░░░   86.80 %
-Text         37 mins         █▓░░░░░░░░░░░░░░░░░░░░░░░   06.57 %
-JSON         18 mins         ▓░░░░░░░░░░░░░░░░░░░░░░░░   03.32 %
-CSS          9 mins          ▒░░░░░░░░░░░░░░░░░░░░░░░░   01.63 %
-JavaScript   7 mins          ▒░░░░░░░░░░░░░░░░░░░░░░░░   01.39 %
-Markdown     1 min           ░░░░░░░░░░░░░░░░░░░░░░░░░   00.20 %
-TOML         0 secs          ░░░░░░░░░░░░░░░░░░░░░░░░░   00.08 %
+HTML         10 hrs 53 mins  ██████████████████████▒░░   89.13 %
+Text         43 mins         █▒░░░░░░░░░░░░░░░░░░░░░░░   05.88 %
+JSON         18 mins         ▓░░░░░░░░░░░░░░░░░░░░░░░░   02.58 %
+CSS          9 mins          ▒░░░░░░░░░░░░░░░░░░░░░░░░   01.27 %
+JavaScript   7 mins          ▒░░░░░░░░░░░░░░░░░░░░░░░░   01.08 %
+TOML         0 secs          ░░░░░░░░░░░░░░░░░░░░░░░░░   00.06 %
 ```
 
 <!--END_SECTION:waka-->
