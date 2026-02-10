@@ -594,7 +594,7 @@ https://github.com/kittinan/spotify-github-profile
 ## <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="28"> About Me Cards
 
 <div align="center">
-  <img src="https://cardivo.vercel.app/api?name=Rimuru%20Tempest&description=Hai%2C%20aku%20EmuVlucht.%20Seorang%20programmer%20biasa%20yang%20masih%20belajar.%20Aku%20sangat%20suka%20menonton%20anime%20dan%20catur%20%3A3&image=https://cdn.myanimelist.net/r/200x268/images/characters/5/495796.webp&backgroundColor=%23ecf0f1&instagram=emuvlucht&github=EmuVlucht&pattern=leaf&colorPattern=%23eaeaea" alt="EmuVlucht Card" width="80%"/>
+  <img src="https://cardivo.vercel.app/api?name=Asuna%20Yuuki&description=Hai%2C%20aku%20EmuVlucht.%20Seorang%20programmer%20biasa%20yang%20masih%20belajar.%20Aku%20sangat%20suka%20menonton%20anime%20dan%20catur%20%3A3&image=https://cdn.myanimelist.net/r/200x268/images/characters/2/295895.webp&backgroundColor=%23ecf0f1&instagram=emuvlucht&github=EmuVlucht&pattern=leaf&colorPattern=%23eaeaea" alt="EmuVlucht Card" width="80%"/>
 
 <details>
 <summary>📋 My Character Favorite List</summary>
