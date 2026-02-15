@@ -327,11 +327,11 @@ ALTERNATIF: Menggunakan Shields.io Badges
 <!--START_SECTION:waka-->
 
 ```txt
-Total Time: 1 hr 25 mins
+Total Time: 2 hrs 2 mins
 
-XML           44 mins         █████████████░░░░░░░░░░░░   51.63 %
-Image (svg)   32 mins         █████████▒░░░░░░░░░░░░░░░   37.30 %
-Text          9 mins          ██▓░░░░░░░░░░░░░░░░░░░░░░   11.07 %
+Image (svg)   1 hr 11 mins    ██████████████▓░░░░░░░░░░   58.46 %
+XML           48 mins         █████████▓░░░░░░░░░░░░░░░   39.18 %
+Text          2 mins          ▓░░░░░░░░░░░░░░░░░░░░░░░░   02.35 %
 ```
 
 <!--END_SECTION:waka-->
